@@ -8,9 +8,9 @@ VALID_UNITS = ["dBm", "dBA", "dBV", "dBW", "V", "A", "W"]
 class RFSignal(float):
     """Class representing an RF signal."""
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, value, *args, **kwargs):
         """Overload the new function for float class."""
-        return super().__new__(cls, *args)
+        return super(cls, cls).__new__(cls, value)
 
     def __init__(self, *args, **kwargs):
         """Initialize the RFSignal data type."""
@@ -21,6 +21,31 @@ class RFSignal(float):
             self.units = "dBV"
 
         super().__init__()
+
+    def __add__(self, other):
+        """Return class after add."""
+        result = super(RFSignal, self).__add__(other)
+        return self.__class__(result, units=self.units)
+
+    def __sub__(self, other):
+        """Return class after subtraction."""
+        result = super(RFSignal, self).__sub__(other)
+        return self.__class__(result, units=self.units)
+
+    def __mul__(self, other):
+        """Return class after multiplication."""
+        result = super(RFSignal, self).__mul__(other)
+        return self.__class__(result, units=self.units)
+
+    def __truediv__(self, other):
+        """Return class after div."""
+        result = super(RFSignal, self).__truediv__(other)
+        return self.__class__(result, units=self.units)
+
+    def __pow__(self, other):
+        """Return class after raised to power."""
+        result = super(RFSignal, self).__pow__(other)
+        return self.__class__(result, units=self.units)
 
     @property
     def dBm(self):

@@ -8,18 +8,41 @@ from rfdesigner.components import RFSignal
 class TestRFSignalClass(unittest.TestCase):
     """Test the RFSignal type."""
 
+    def test_correct_type(self):
+        """Test to check if class is immutable."""
+        my_var = RFSignal(1)
+        my_var += 1
+        self.assertEqual(my_var.__class__, RFSignal)
+        my_var -= 1
+        self.assertEqual(my_var.__class__, RFSignal)
+        my_var *= 1
+        self.assertEqual(my_var.__class__, RFSignal)
+        my_var /= 1
+        self.assertEqual(my_var.__class__, RFSignal)
+        my_var = my_var ** 2
+        self.assertEqual(my_var.__class__, RFSignal)
+
     def test_assign(self):
         """Test to check basic assignment."""
-        my_var = RFSignal()
-        my_var = 1234.5678
-        self.assertEqual(my_var, 1234.5678)
+        my_var = RFSignal(2)
+        self.assertEqual(my_var, 2)
 
     def test_default_units(self):
         """Test to check correct default units."""
-        my_var = RFSignal()
+        my_var = RFSignal(1)
         self.assertEqual(my_var.units, "dBm")
-        my_var = RFSignal(units="bad-option")
+        my_var = RFSignal(1, units="bad-option")
         self.assertEqual(my_var.units, "dBm")
+
+    def test_no_unit_change(self):
+        """Test to check that units don't change with math operands."""
+        my_var = RFSignal(1)
+        self.assertEqual(my_var.units, "dBm")
+        my_var += 1
+        self.assertEqual(my_var.units, "dBm")
+        new_var = my_var - 4
+        self.assertEqual(new_var.__class__, RFSignal)
+        self.assertEqual(new_var.units, "dBm")
 
     def test_basic_math(self):
         """Test to check basic math operations."""
