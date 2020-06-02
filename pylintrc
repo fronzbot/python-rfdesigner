@@ -1,0 +1,43 @@
+[MASTER]
+reports=no
+
+# Reasons disabled:
+# locally-disabled - it spams too much
+# duplicate-code - it's annoying
+# unused-argument - generic callbacks and setup methods create a lot of warnings
+# too-many-* - are not enforced for the sake of readability
+# too-few-* - same as too-many-*
+# no-else-return - I don't see any reason to enforce this. both forms are readable
+# no-self-use - stupid and only annoying
+# unexpected-keyword-arg - doesn't allow for use of **kwargs, which is dumb
+
+disable=
+  format,
+  bad-continuation,
+  locally-disabled,
+  unused-argument,
+  duplicate-code,
+  implicit-str-concat,
+  too-many-arguments,
+  too-many-branches,
+  too-many-instance-attributes,
+  too-many-locals,
+  too-many-public-methods,
+  too-many-return-statements,
+  too-many-statements,
+  too-many-lines,
+  too-few-public-methods,
+  no-else-return,
+  no-self-use,
+  unexpected-keyword-arg,
+  invalid-name,
+
+#[BASIC]
+#good_names=
+#  dBm,
+#  dBW,
+#  dBV,
+#  dBA,
+#  W,
+#  V,
+#  A
