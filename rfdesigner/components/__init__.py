@@ -8,6 +8,10 @@ VALID_UNITS = ["dBm", "dBA", "dBV", "dBW", "V", "A", "W"]
 class RFSignal(float):
     """Class representing an RF signal."""
 
+    def __new__(cls, *args, **kwargs):
+        """Overload the new function for float class."""
+        return super().__new__(cls, *args)
+
     def __init__(self, *args, **kwargs):
         """Initialize the RFSignal data type."""
         self.units = kwargs.get("units", "dBm")
