@@ -50,42 +50,42 @@ class RFSignal(float):
     @property
     def dBm(self):
         """Return value as dBm."""
-        return self._convert_to_dBW() + 30
+        return RFSignal(self._convert_to_dBW() + 30.0)
 
     @property
     def dBW(self):
         """Return value is dBW."""
-        return self._convert_to_dBW()
+        return RFSignal(self._convert_to_dBW())
 
     @property
     def dBV(self):
         """Return value as dBV."""
-        return 2 * self._convert_to_dBW()
+        return RFSignal(2.0 * self._convert_to_dBW())
 
     @property
     def dBA(self):
         """Return value as dBA."""
-        return 2 * self._convert_to_dBW()
+        return RFSignal(2.0 * self._convert_to_dBW())
 
     @property
     def W(self):
         """Return value as Watts."""
-        return self._convert_to_W()
+        return RFSignal(self._convert_to_W())
 
     @property
     def V(self):
         """Return value as Volts."""
-        return math.sqrt(self._convert_to_W() * 50)
+        return RFSignal(math.sqrt(self._convert_to_W() * 50.0))
 
     @property
     def A(self):
         """Return value as Amps."""
-        return math.sqrt(self._convert_to_W() / 50)
+        return RFSignal(math.sqrt(self._convert_to_W() / 50.0))
 
     def _convert_to_dBW(self):
         """Convert current units to dBW."""
         if self.units == "dBm":
-            return self - 30
+            return self - 30.0
         if self.units in ["dBV", "dBA"]:
             return 0.5 * self
         power = self
@@ -97,13 +97,13 @@ class RFSignal(float):
         """Convert Volts of Amps to Watts with 50Ohm reference."""
         power = self ** 2
         if self.units == "A":
-            return power * 50
-        return power / 50
+            return power * 50.0
+        return power / 50.0
 
     def _convert_to_W(self):
         """Convert current units to Watts."""
         value_dBW = self._convert_to_dBW()
-        return 10 ** (value_dBW / 10)
+        return 10 ** (value_dBW / 10.0)
 
 
 class Generic:
@@ -141,7 +141,7 @@ class Generic:
     def _estimate_nonlinearities(self):
         """Estimate non-linearities based on inputs."""
         if self.p1db == math.inf and self.oip3 == math.inf:
-            self.p1db = self.iip3 + self.gain
+            self.oip3 = self.iip3 + self.gain
         if self.oip3 == math.inf and self.iip3 == math.inf:
             self.oip3 = self.p1db.dBm + 9.6
         if self.iip3 == math.inf:
