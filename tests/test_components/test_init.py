@@ -124,8 +124,8 @@ class TestGeneric(unittest.TestCase):
     def test_cascade(self):
         """Test cascade function."""
         rf = Generic(gain=10, p1db=10)
-        self.assertEqual(rf.cascade(pin=1), 11)
-        self.assertEqual(rf.cascade(pin=1).__class__, RFSignal)
+        self.assertEqual(rf.output(pin=1), 11)
+        self.assertEqual(rf.output(pin=1).__class__, RFSignal)
         self.assertFalse(rf.is_compressed)
-        self.assertEqual(rf.cascade(pin=20), 19)
+        self.assertEqual(rf.output(pin=20), 19)
         self.assertTrue(rf.is_compressed)

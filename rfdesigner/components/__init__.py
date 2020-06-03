@@ -1,7 +1,6 @@
 """Generic component definitions."""
 import math
 
-
 VALID_UNITS = ["dBm", "dBA", "dBV", "dBW", "V", "A", "W"]
 
 
@@ -251,14 +250,17 @@ class Generic:
         """Set output power value."""
         self._pout = RFSignal(value, "dBm")
 
-    def cascade(self, pin=0):
-        """Generate output after cascading."""
-        _pin = RFSignal(pin, "dBm")
-        self.pout = _pin.dBm + self.gain.dBV
+    def output(self, pin=0):
+        """Generate output given input power."""
+        _pin = pin
+        if not isinstance(_pin, RFSignal):
+            # Assume input power is dBm
+            _pin = RFSignal(pin, "dBm")
+        self._pout = _pin.dBm + self.gain.dBV
         if _pin.dBm >= self.p1db.dBm - 1:
             self.is_compressed = True
-            self.pout = self.gain.dBV + self.p1db.dBm - 1
-        return self.pout
+            self._pout = self.gain.dBV + self.p1db.dBm - 1
+        return self._pout
 
 
 class Passive(Generic):
