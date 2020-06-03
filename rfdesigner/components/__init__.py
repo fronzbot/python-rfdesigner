@@ -123,20 +123,20 @@ class Generic:
         :param iip3: Input 3rd-order intercept point in dBm
         """
         self.name = kwargs.get("name", "")
-        self.power = RFSignal(kwargs.get("power", 0), units="W")
-        self.gain = RFSignal(kwargs.get("gain", 0), units="dBV")
-        self.nf = RFSignal(kwargs.get("nf", -1 * self.gain), units="dBV")
-        self.p1db = RFSignal(kwargs.get("p1db", math.inf), units="dBm")
-        self.oip3 = RFSignal(kwargs.get("oip3", math.inf), units="dBm")
-        self.iip3 = RFSignal(kwargs.get("iip3", math.inf), units="dBm")
+        self._power = RFSignal(kwargs.get("power", 0), units="W")
+        self._gain = RFSignal(kwargs.get("gain", 0), units="dBV")
+        self._nf = RFSignal(kwargs.get("nf", -1 * self.gain), units="dBV")
+        self._p1db = RFSignal(kwargs.get("p1db", math.inf), units="dBm")
+        self._oip3 = RFSignal(kwargs.get("oip3", math.inf), units="dBm")
+        self._iip3 = RFSignal(kwargs.get("iip3", math.inf), units="dBm")
 
-        self.total_gain = RFSignal(0, units="dBV")
-        self.total_nf = RFSignal(0, units="dBV")
-        self.total_iip3 = RFSignal(0, units="dBm")
+        self._total_gain = RFSignal(0, units="dBV")
+        self._total_nf = RFSignal(0, units="dBV")
+        self._total_iip3 = RFSignal(0, units="dBm")
         self._estimate_nonlinearities()
 
         self.is_compressed = False
-        self.pout = RFSignal(0, units="dBm")
+        self._pout = RFSignal(0, units="dBm")
 
     def _estimate_nonlinearities(self):
         """Estimate non-linearities based on inputs."""
@@ -151,6 +151,106 @@ class Generic:
         if self.oip3 == math.inf:
             self.oip3 = self.iip3.dBm + self.gain.dBV
 
+    @property
+    def power(self):
+        """Get power value."""
+        return self._power
+
+    @power.setter
+    def power(self, value):
+        """Set power value."""
+        self._power = RFSignal(value, "W")
+
+    @property
+    def gain(self):
+        """Get gain value."""
+        return self._gain
+
+    @gain.setter
+    def gain(self, value):
+        """Set gain value."""
+        self._gain = RFSignal(value, "dBV")
+
+    @property
+    def nf(self):
+        """Get noise figure value."""
+        return self._nf
+
+    @nf.setter
+    def nf(self, value):
+        """Set noise figure value."""
+        self._nf = RFSignal(value, "dBV")
+
+    @property
+    def p1db(self):
+        """Get p1db value."""
+        return self._p1db
+
+    @p1db.setter
+    def p1db(self, value):
+        """Set p1db value."""
+        self._p1db = RFSignal(value, "dBm")
+
+    @property
+    def oip3(self):
+        """Get oip3 value."""
+        return self._oip3
+
+    @oip3.setter
+    def oip3(self, value):
+        """Set oip3 value."""
+        self._oip3 = RFSignal(value, "dBm")
+
+    @property
+    def iip3(self):
+        """Get iip3 value."""
+        return self._iip3
+
+    @iip3.setter
+    def iip3(self, value):
+        """Set iip3 value."""
+        self._iip3 = RFSignal(value, "dBm")
+
+    @property
+    def total_gain(self):
+        """Get total gain value."""
+        return self._total_gain
+
+    @total_gain.setter
+    def total_gain(self, value):
+        """Set total gain value."""
+        self._total_gain = RFSignal(value, "dBV")
+
+    @property
+    def total_nf(self):
+        """Get total noise figure."""
+        return self._total_nf
+
+    @total_nf.setter
+    def total_nf(self, value):
+        """Set total noise figure."""
+        self._total_nf = RFSignal(value, "dBV")
+
+    @property
+    def total_iip3(self):
+        """Get total iip3 value."""
+        return self._total_iip3
+
+    @total_iip3.setter
+    def total_iip3(self, value):
+        """Set total iip3 value."""
+        self._total_iip3 = RFSignal(value, "dBm")
+
+    @property
+    def pout(self):
+        """Get output power value."""
+        return self._pout
+
+    @pout.setter
+    def pout(self, value):
+        """Set output power value."""
+        self._pout = RFSignal(value, "dBm")
+
     def cascade(self, pin=0):
         """Generate output after cascading."""
         _pin = RFSignal(pin, "dBm")
@@ -158,4 +258,8 @@ class Generic:
         if _pin.dBm >= self.p1db.dBm - 1:
             self.is_compressed = True
             self.pout = self.gain.dBV + self.p1db.dBm - 1
-        return self.pout.dBm
+        return self.pout
+
+
+class Passive(Generic):
+    """Class representing a generic passive."""
