@@ -64,6 +64,17 @@ class TestRFSignalClass(unittest.TestCase):
         self.assertEqual(my_var.V, math.sqrt(0.05))
         self.assertEqual(my_var.A, math.sqrt(0.00002))
 
+    def test_units_as_dBm_negative(self):
+        """Test to check correct unit conversions."""
+        my_var = RFSignal(-10, units="dBm")
+        self.assertEqual(my_var.dBm, -10)
+        self.assertEqual(my_var.dBW, -40)
+        self.assertEqual(my_var.dBV, -80)
+        self.assertEqual(my_var.dBA, -80)
+        self.assertEqual(my_var.W, 1e-4)
+        self.assertEqual(my_var.V, math.sqrt(5e-3))
+        self.assertEqual(my_var.A, math.sqrt(2e-6))
+
 
 class TestGeneric(unittest.TestCase):
     """Test the generic RF class."""
