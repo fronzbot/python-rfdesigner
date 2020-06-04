@@ -8,13 +8,11 @@ def noise_floor(nf=1, bandwidth=1, noise_temp=290):
     Calculate noise floor of a receiver.
 
     :param nf: Noise figure in dB
-    :param bandwidth: bandwidth in MHz
+    :param bandwidth: bandwidth in Hz
     :param noise_temp: noise temperature in Kelvin
     """
     return (
-        10 * math.log10(KBOLTZMAN * noise_temp * 1000)
-        + nf
-        + 10 * math.log10(bandwidth * 1e6)
+        10 * math.log10(KBOLTZMAN * noise_temp * 1000) + nf + 10 * math.log10(bandwidth)
     )
 
 
@@ -63,7 +61,7 @@ def cascade(system=None, pin=0, bandwidth=1, noise_temp=290):
 
     :param system: Sequential list of RF objects where position in list indicates position in signal chain. Currently mutli-branch networks not supported.
     :param pin: Input power of the system in dBm.
-    :param bandwidth: Bandwidth of input signal in MHz.
+    :param bandwidth: Bandwidth of input signal in Hz.
     :param noise_temp: Noise temperature in Kelvin.
     """
     if not system:

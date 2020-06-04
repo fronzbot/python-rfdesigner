@@ -73,5 +73,5 @@ class TestCascade(unittest.TestCase):
 
     def test_noise_floor(self):
         """Test the noise floor method."""
-        result = sim.noise_floor(nf=0, bandwidth=1e-6, noise_temp=290)
+        result = sim.noise_floor(nf=0, bandwidth=1, noise_temp=290)
         self.assertEqual(round(result), -174)
