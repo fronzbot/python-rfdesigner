@@ -49,40 +49,63 @@ class RFSignal(float):
     @property
     def dBm(self):
         """Return value as dBm."""
+        if self.units == "dBm":
+            return self
         return RFSignal(self._convert_to_dBW() + 30.0)
 
     @property
     def dBW(self):
         """Return value is dBW."""
+        if self.units == "dBW":
+            return self
         return RFSignal(self._convert_to_dBW())
 
     @property
     def dBV(self):
         """Return value as dBV."""
+        if self.units == "dBV":
+            return self
         return RFSignal(2.0 * self._convert_to_dBW())
 
     @property
     def dBA(self):
         """Return value as dBA."""
+        if self.units == "dBA":
+            return self
         return RFSignal(2.0 * self._convert_to_dBW())
 
     @property
     def W(self):
         """Return value as Watts."""
+        if self.units == "W":
+            return self
         return RFSignal(self._convert_to_W())
 
     @property
     def V(self):
         """Return value as Volts."""
+        if self.units == "V":
+            return self
         return RFSignal(math.sqrt(self._convert_to_W() * 50.0))
 
     @property
     def A(self):
         """Return value as Amps."""
+        if self.units == "A":
+            return self
         return RFSignal(math.sqrt(self._convert_to_W() / 50.0))
+
+    @property
+    def Vgain(self):
+        """Return value as V/V."""
+        if self.units == "V":
+            return self
+        return RFSignal(10 ** (self._convert_to_dBW() / 10), units="V")
 
     def _convert_to_dBW(self):
         """Convert current units to dBW."""
+        if self.units == "dBW":
+            return self
         if self.units == "dBm":
             return self - 30.0
         if self.units in ["dBV", "dBA"]:
@@ -101,7 +124,11 @@ class RFSignal(float):
 
     def _convert_to_W(self):
         """Convert current units to Watts."""
-        value_dBW = self._convert_to_dBW()
+        if self.units == "W":
+            return self
+        value_dBW = self
+        if self.units != "dBW":
+            value_dBW = self._convert_to_dBW()
         return 10 ** (value_dBW / 10.0)
 
 
@@ -115,7 +142,7 @@ class Generic:
         All of the following inputs are optional.
         :param name: Name of the block (for example, a part name)
         :param power: Power consumption of the block in W
-        :param gain: Gain of the block in dB
+        :param gain: Gain of the block in dBW
         :param nf: Noise figure of the block in dB
         :param p1db: 1dB compression point in dBm
         :param oip3: Output 3rd-order intercept point in dBm
@@ -123,15 +150,16 @@ class Generic:
         """
         self.name = kwargs.get("name", "")
         self._power = RFSignal(kwargs.get("power", 0), units="W")
-        self._gain = RFSignal(kwargs.get("gain", 0), units="dBV")
-        self._nf = RFSignal(kwargs.get("nf", -1 * self.gain), units="dBV")
+        self._gain = RFSignal(kwargs.get("gain", 0), units="dBW")
+        self._nf = RFSignal(kwargs.get("nf", -1 * self.gain), units="dBW")
         self._p1db = RFSignal(kwargs.get("p1db", math.inf), units="dBm")
         self._oip3 = RFSignal(kwargs.get("oip3", math.inf), units="dBm")
         self._iip3 = RFSignal(kwargs.get("iip3", math.inf), units="dBm")
 
-        self._total_gain = RFSignal(0, units="dBV")
-        self._total_nf = RFSignal(0, units="dBV")
+        self._total_gain = RFSignal(0, units="dBW")
+        self._total_nf = RFSignal(0, units="dBW")
         self._total_iip3 = RFSignal(0, units="dBm")
+        self._total_p1db = RFSignal(0, units="dBm")
         self._estimate_nonlinearities()
 
         self.is_compressed = False
@@ -142,13 +170,13 @@ class Generic:
         if self.p1db == math.inf and self.oip3 == math.inf:
             self.oip3 = self.iip3 + self.gain
         if self.oip3 == math.inf and self.iip3 == math.inf:
-            self.oip3 = self.p1db.dBm + 9.6
+            self.oip3 = self.p1db + 9.6
         if self.iip3 == math.inf:
-            self.iip3 = self.oip3.dBm - self.gain.dBV
+            self.iip3 = self.oip3 - self.gain
         if self.p1db == math.inf:
-            self.p1db = self.oip3.dBm - 9.6
+            self.p1db = self.oip3 - 9.6
         if self.oip3 == math.inf:
-            self.oip3 = self.iip3.dBm + self.gain.dBV
+            self.oip3 = self.iip3 + self.gain
 
     @property
     def power(self):
@@ -158,7 +186,7 @@ class Generic:
     @power.setter
     def power(self, value):
         """Set power value."""
-        self._power = RFSignal(value, "W")
+        self._power = RFSignal(value, units="W")
 
     @property
     def gain(self):
@@ -168,7 +196,7 @@ class Generic:
     @gain.setter
     def gain(self, value):
         """Set gain value."""
-        self._gain = RFSignal(value, "dBV")
+        self._gain = RFSignal(value, units="dBW")
 
     @property
     def nf(self):
@@ -178,7 +206,7 @@ class Generic:
     @nf.setter
     def nf(self, value):
         """Set noise figure value."""
-        self._nf = RFSignal(value, "dBV")
+        self._nf = RFSignal(value, units="dBW")
 
     @property
     def p1db(self):
@@ -188,7 +216,7 @@ class Generic:
     @p1db.setter
     def p1db(self, value):
         """Set p1db value."""
-        self._p1db = RFSignal(value, "dBm")
+        self._p1db = RFSignal(value, units="dBm")
 
     @property
     def oip3(self):
@@ -198,7 +226,7 @@ class Generic:
     @oip3.setter
     def oip3(self, value):
         """Set oip3 value."""
-        self._oip3 = RFSignal(value, "dBm")
+        self._oip3 = RFSignal(value, units="dBm")
 
     @property
     def iip3(self):
@@ -208,7 +236,7 @@ class Generic:
     @iip3.setter
     def iip3(self, value):
         """Set iip3 value."""
-        self._iip3 = RFSignal(value, "dBm")
+        self._iip3 = RFSignal(value, units="dBm")
 
     @property
     def total_gain(self):
@@ -218,7 +246,7 @@ class Generic:
     @total_gain.setter
     def total_gain(self, value):
         """Set total gain value."""
-        self._total_gain = RFSignal(value, "dBV")
+        self._total_gain = RFSignal(value, units="dBW")
 
     @property
     def total_nf(self):
@@ -228,7 +256,7 @@ class Generic:
     @total_nf.setter
     def total_nf(self, value):
         """Set total noise figure."""
-        self._total_nf = RFSignal(value, "dBV")
+        self._total_nf = RFSignal(value, units="dBW")
 
     @property
     def total_iip3(self):
@@ -238,7 +266,17 @@ class Generic:
     @total_iip3.setter
     def total_iip3(self, value):
         """Set total iip3 value."""
-        self._total_iip3 = RFSignal(value, "dBm")
+        self._total_iip3 = RFSignal(value, units="dBm")
+
+    @property
+    def total_p1db(self):
+        """Get total p1db value."""
+        return self._total_p1db
+
+    @total_p1db.setter
+    def total_p1db(self, value):
+        """Set total p1db value."""
+        self._total_p1db = RFSignal(value, units="dBm")
 
     @property
     def pout(self):
@@ -248,18 +286,18 @@ class Generic:
     @pout.setter
     def pout(self, value):
         """Set output power value."""
-        self._pout = RFSignal(value, "dBm")
+        self._pout = RFSignal(value, units="dBm")
 
     def output(self, pin=0):
         """Generate output given input power."""
         _pin = pin
         if not isinstance(_pin, RFSignal):
             # Assume input power is dBm
-            _pin = RFSignal(pin, "dBm")
-        self._pout = _pin.dBm + self.gain.dBV
-        if _pin.dBm >= self.p1db.dBm - 1:
+            _pin = RFSignal(pin, units="dBm")
+        self._pout = _pin.dBm + self.gain
+        if _pin.dBm >= self.p1db - 1:
             self.is_compressed = True
-            self._pout = self.gain.dBV + self.p1db.dBm - 1
+            self._pout = self.gain + self.p1db - 1
         return self._pout
 
 
