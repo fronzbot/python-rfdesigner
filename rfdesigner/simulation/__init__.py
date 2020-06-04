@@ -12,9 +12,7 @@ def noise_floor(nf=1, bandwidth=1, noise_temp=290):
     :param noise_temp: noise temperature in Kelvin
     """
     return (
-        10 * math.log10(KBOLTZMAN * noise_temp * 1000)
-        + nf
-        + 10 * math.log10(bandwidth)
+        10 * math.log10(KBOLTZMAN * noise_temp * 1000) + nf + 10 * math.log10(bandwidth)
     )
 
 
