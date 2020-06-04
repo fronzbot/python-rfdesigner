@@ -121,8 +121,8 @@ class TestGeneric(unittest.TestCase):
         self.assertEqual(rf.oip3, 5)
         self.assertEqual(rf.iip3, 6)
 
-    def test_cascade(self):
-        """Test cascade function."""
+    def test_output(self):
+        """Test output function."""
         rf = Generic(gain=10, p1db=10)
         self.assertEqual(rf.output(pin=1), 11)
         self.assertEqual(rf.output(pin=1).__class__, RFSignal)

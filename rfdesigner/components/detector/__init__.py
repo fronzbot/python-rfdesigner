@@ -64,6 +64,6 @@ class Detector(Amplifier):
     def output(self, pin=0):
         """Get output power values."""
         self._pout = super().output(pin=pin)
-        self._pout = max(self._pout.dBm, self.mds.dBm + self.gain.dBV)
-        self._pout = min(self._pout.dBm, self.smax.dBm + self.gain.dBV)
+        self._pout = max(self._pout.dBm, self.mds.dBm + self.gain)
+        self._pout = min(self._pout.dBm, self.smax.dBm + self.gain)
         return self._pout

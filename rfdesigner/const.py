@@ -5,6 +5,10 @@ PATCH_VERSION = "0.rc0"
 
 __version__ = f"{MAJOR_VERSION}.{MINOR_VERSION}.{PATCH_VERSION}"
 
+# System constants
+KBOLTZMAN = 1.38e-23
+
+# Project package variable
 REQUIRED_PYTHON_VER = (3, 5, 0)
 
 PROJECT_GITHUB_USERNAME = "fronzbot"
