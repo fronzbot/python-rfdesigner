@@ -85,6 +85,7 @@ def cascade(system=None, pin=0, bandwidth=1, noise_temp=290):
     total_oip3 = total_iip3 + total_gain
     mds = noise_floor(nf=total_nf, bandwidth=bandwidth, noise_temp=noise_temp)
     snr = pin - mds - total_nf
+    sfdr = 2 / 3 * (total_iip3 - mds)
 
     results = {
         "pin": pin,
@@ -95,6 +96,7 @@ def cascade(system=None, pin=0, bandwidth=1, noise_temp=290):
         "oip3": total_oip3,
         "p1db": total_p1db,
         "snr": snr,
+        "sfdr": sfdr,
         "mds": mds,
     }
     return results

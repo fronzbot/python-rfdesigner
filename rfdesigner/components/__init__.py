@@ -239,6 +239,11 @@ class Generic:
         self._iip3 = RFSignal(value, units="dBm")
 
     @property
+    def total_im3(self):
+        """Get the im3 value."""
+        return 2 * (self.total_gain + self.total_iip3 - self.pout)
+
+    @property
     def total_gain(self):
         """Get total gain value."""
         return self._total_gain
