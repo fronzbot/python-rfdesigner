@@ -1,6 +1,6 @@
 """Test module for core simulation methods."""
 import unittest
-import rfdesigner.simulation as sim
+import rfdesigner.simulation.cascade as sim
 from rfdesigner.components import Generic
 
 
@@ -20,9 +20,9 @@ class TestCascade(unittest.TestCase):
 
     def test_exit_on_empty_system(self):
         """Test that sim returns empty dict on empty system."""
-        result = sim.cascade()
+        result = sim.run()
         self.assertDictEqual(result, {})
-        result = sim.cascade(system=[])
+        result = sim.run(system=[])
         self.assertDictEqual(result, {})
 
     def test_cascade_gain(self):
@@ -64,14 +64,9 @@ class TestCascade(unittest.TestCase):
 
     def test_cascade_full(self):
         """Test the full cascade method."""
-        results = sim.cascade(self.system, pin=-60)
+        results = sim.run(self.system, pin=-60)
         self.assertEqual(results["pout"], -60 + self.expected_gain)
         self.assertEqual(results["gain"], self.expected_gain)
         self.assertEqual(results["nf"], self.expected_nf)
         self.assertEqual(results["iip3"], self.expected_iip3)
         self.assertEqual(results["oip3"], self.expected_iip3 + self.expected_gain)
-
-    def test_noise_floor(self):
-        """Test the noise floor method."""
-        result = sim.noise_floor(nf=0, bandwidth=1, noise_temp=290)
-        self.assertEqual(round(result), -174)
