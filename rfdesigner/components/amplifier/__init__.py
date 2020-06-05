@@ -21,3 +21,7 @@ class Amplifier(Generic):
 
 class LNA(Amplifier):
     """Representation of an LNA."""
+
+
+class PowerAmp(Amplifier):
+    """Representation of a Power Amplifier."""
