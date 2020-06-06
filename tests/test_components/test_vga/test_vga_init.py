@@ -24,8 +24,8 @@ class TestVGA(unittest.TestCase):
     def test_vga_gain(self):
         """Test VGA gain property."""
         vga = VGA(gain_min=0, gain_max=10, gain_step=1)
-        self.assertEqual(round(vga.gain.dBV, 2), 1)
+        self.assertEqual(round(vga.gain.dBW, 2), 1)
         vga.control = 2
-        self.assertEqual(round(vga.gain.dBV, 2), 2)
+        self.assertEqual(round(vga.gain.dBW, 2), 2)
         vga.control = 11
-        self.assertEqual(round(vga.gain.dBV, 2), 10)
+        self.assertEqual(round(vga.gain.dBW, 2), 10)

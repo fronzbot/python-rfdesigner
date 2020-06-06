@@ -1,6 +1,9 @@
 """Initialize the Amplifier objects."""
 import math
-from rfdesigner.components import Generic
+from rfdesigner import const
+from rfdesigner.components import Generic, SUPPORTED
+
+AMP_SUPPORTED = [const.ATTR_F3DB, const.ATTR_FBW] + SUPPORTED
 
 
 class Amplifier(Generic):
@@ -17,6 +20,11 @@ class Amplifier(Generic):
         super().__init__(**kwargs)
         self.f3db = kwargs.get("f3db", math.inf)
         self.fbw = kwargs.get("fbw", math.inf)
+
+    @property
+    def supported(self):
+        """Return list of supported categories."""
+        return AMP_SUPPORTED
 
 
 class LNA(Amplifier):

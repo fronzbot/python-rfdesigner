@@ -1,7 +1,18 @@
 """Generic component definitions."""
 import math
+from rfdesigner import const
 
 VALID_UNITS = ["dBm", "dBA", "dBV", "dBW", "V", "A", "W"]
+
+SUPPORTED = [
+    const.ATTR_NAME,
+    const.ATTR_GAIN,
+    const.ATTR_NF,
+    const.ATTR_POWER,
+    const.ATTR_IIP3,
+    const.ATTR_OIP3,
+    const.ATTR_P1DB,
+]
 
 
 class RFSignal(float):
@@ -17,7 +28,7 @@ class RFSignal(float):
         if self.units not in VALID_UNITS:
             self.units = "dBm"
         if self.units == "dB":
-            self.units = "dBV"
+            self.units = "dBW"
 
         super().__init__()
 
@@ -304,6 +315,11 @@ class Generic:
             self.is_compressed = True
             self._pout = self.gain + self.p1db - 1
         return self._pout
+
+    @property
+    def supported(self):
+        """Return list of supported categories."""
+        return SUPPORTED
 
 
 class Passive(Generic):

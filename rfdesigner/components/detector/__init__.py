@@ -1,6 +1,7 @@
 """Initialize the detector class."""
+from rfdesigner import const
 from rfdesigner.components import RFSignal
-from rfdesigner.components.amplifier import Amplifier
+from rfdesigner.components.amplifier import Amplifier, AMP_SUPPORTED
 
 
 LAW_UNIT_MAP = {
@@ -8,6 +9,8 @@ LAW_UNIT_MAP = {
     "square": "W",
     "rms": "V",
 }
+
+DETECTOR_SUPPORTED = [const.ATTR_LAW, const.ATTR_MDS, const.ATTR_SMAX] + AMP_SUPPORTED
 
 
 class Detector(Amplifier):
@@ -67,3 +70,8 @@ class Detector(Amplifier):
         self._pout = max(self._pout.dBm, self.mds.dBm + self.gain)
         self._pout = min(self._pout.dBm, self.smax.dBm + self.gain)
         return self._pout
+
+    @property
+    def supported(self):
+        """Return supported features."""
+        return DETECTOR_SUPPORTED
