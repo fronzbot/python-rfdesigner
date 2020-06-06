@@ -1,11 +1,10 @@
 """CLI definitions for RFDesigner."""
 import sys
 import os.path
-import json
 import cmd2
 from rfdesigner import options
 from rfdesigner.netlist import parse_netlist
-from rfdesigner.simulation import cascade
+from rfdesigner.simulation import cascade, results
 
 
 def validate_cascade_args(args, systems):
@@ -32,7 +31,7 @@ def validate_cascade_args(args, systems):
 
     if args.save is not None:
         if os.path.isdir(args.save):
-            args.save = os.path.join(args.save, f"rf_cascade_results_{args.name}.json")
+            args.save = os.path.join(args.save, f"rf_cascade_results_{args.name}.csv")
         elif not os.path.isfile(args.save):
             errors.append(f"{args.save} not a valid file or directory.")
 
@@ -83,10 +82,18 @@ class RFcli(cmd2.Cmd):
             noise_temp=args.temp,
         )
         if not args.no_output:
-            self.poutput(json.dumps(result))
+            lines = results.print_cascade(
+                self.systems[args.name].system, result, return_lines=True
+            )
+            for line in lines:
+                print_string = ""
+                for element in line:
+                    print_string += f"{element:<16}"
+                self.poutput(print_string)
+
         if args.save:
-            with open(args.save, "w") as json_file:
-                json.dump(result, json_file, indent=4)
+            csv_lines = results.csv_cascade(self.systems[args.name].system, result)
+            results.save_csv(args.save, csv_lines)
             self.poutput(f"Results saved to {args.save}")
 
     def do_exit(self, line):
