@@ -37,6 +37,7 @@ setup(
     url=PROJECT_URL,
     platforms="any",
     py_modules=["rfdesigner"],
+    entry_points={"console_scripts": ["rfdesigner = rfdesigner.__main__:main"]},
     packages=PACKAGES,
     include_package_data=True,
     install_requires=REQUIRES,

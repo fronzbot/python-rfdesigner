@@ -41,6 +41,9 @@ def parse_netlist(file_name):
     netlist = toml.load(file_name)
     system_list = {}
     for name, system in netlist.items():
+        if name in ["sim", "simulator", "simulation"]:
+            system_list["sim"] = system
+            continue
         if validate_signal_chain(name, system):
             system_list[name] = SignalChain(name, system)
     return system_list

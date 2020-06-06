@@ -8,6 +8,25 @@ __version__ = f"{MAJOR_VERSION}.{MINOR_VERSION}.{PATCH_VERSION}"
 # System constants
 KBOLTZMAN = 1.38e-23
 
+# General attributes
+# Property name, Description, Units
+ATTR_CONTROL = ["control", "Control voltage", "V"]
+ATTR_F3DB = ["f3db", "Dominant pole frequency of the block (3dB roll-off)", "MHz"]
+ATTR_FBW = ["fbw", "Cutoff frequency of the block", "MHz"]
+ATTR_GAIN = ["gain", "Gain of the block", "dB"]
+ATTR_GAIN_MAX = ["gain_max", "Maximum block gain", "dB"]
+ATTR_GAIN_MIN = ["gain_min", "Minimum block gain", "dB"]
+ATTR_GAIN_STEP = ["gain_step", "Gain control step/LSB", "dB"]
+ATTR_IIP3 = ["iip3", "Input 3rd-order intercept", "dBm"]
+ATTR_LAW = ["law", "Detector law", "log/square/rms"]
+ATTR_MDS = ["mds", "Minimum detectable signal", "dBm"]
+ATTR_NAME = ["name", "Name of block (for example, a part name)", ""]
+ATTR_NF = ["nf", "Noise figure of the block", "dB"]
+ATTR_OIP3 = ["oip3", "Output 3rd-order intercept", "dBm"]
+ATTR_P1DB = ["p1db", "Output 1dB Compression point", "dBm"]
+ATTR_POWER = ["power", "Power consumption of the block", "W"]
+ATTR_SMAX = ["smax", "Maximum input signal", "dBm"]
+
 # Project package variable
 REQUIRED_PYTHON_VER = (3, 5, 0)
 
