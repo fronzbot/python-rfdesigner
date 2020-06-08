@@ -70,5 +70,5 @@ The options available for cascade analysis are as follows:
 - ``--pin=INPUT_POWER``: Input power in dBm (overrides anything defined in the ``[simulation]`` section of the netlist)
 - ``--bw=BANDWIDTH``: Signal bandwidth in MHz
 - ``--temp=TEMPERATURE``: Temperature (K) to extract noise floor
-- ``--save=RESULTS_DIR``: Directory (or file) to save results (json formatted)
+- ``--save=RESULTS_DIR``: Directory (or file) to save results (csv formatted)
 - ``--no-output``: If this option is used, the results are not printed to the terminal after the simulation is finished

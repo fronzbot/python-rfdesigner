@@ -1,5 +1,6 @@
 """Netlist utility for RFDesigner."""
 from os.path import isfile
+from collections import OrderedDict
 import toml
 from rfdesigner.components import Generic, Passive
 from rfdesigner.components.amplifier import Amplifier, LNA, PowerAmp
@@ -38,7 +39,7 @@ def parse_netlist(file_name):
     if not isfile(file_name):
         print(f"Netlist file {file_name} not found!")
         return None
-    netlist = toml.load(file_name)
+    netlist = OrderedDict(toml.load(file_name))
     system_list = {}
     for name, system in netlist.items():
         if name in ["sim", "simulator", "simulation"]:
@@ -76,9 +77,7 @@ class SignalChain:
     def generate_system_list(self, system):
         """Create a list from netlisted system."""
         system_list = []
-        for block_number in sorted(system):
-            block_args = system[block_number]
-            system_list.append(
-                IMPLEMENTED_BLOCKS[block_args["type"].lower()](**block_args)
-            )
+        for block_number in system:
+            props = system[block_number]
+            system_list.append(IMPLEMENTED_BLOCKS[props["type"].lower()](**props))
         return system_list
